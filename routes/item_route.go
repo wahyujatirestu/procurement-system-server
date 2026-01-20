@@ -9,7 +9,9 @@ import (
 
 func ItemRoute(r fiber.Router, c *controllers.ItemController, auth middleware.AuthMiddleware) {
 	item := r.Group("/items")
-	item.Use(auth.RequireToken("admin"))
+	item.Use(auth.RequireToken())
 	item.Post("/", c.Create)
 	item.Get("/", c.FindAll)
+	item.Get("/:id", c.FindById)
+	item.Put("/:id", c.Update)
 }

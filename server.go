@@ -12,6 +12,7 @@ import (
 	"github.com/wahyujatirestu/simple-procurement-system/routes"
 	"github.com/wahyujatirestu/simple-procurement-system/services"
 	utilsservice "github.com/wahyujatirestu/simple-procurement-system/utils/services"
+	"github.com/wahyujatirestu/simple-procurement-system/webhook"
 	"gorm.io/gorm"
 )	
 
@@ -41,6 +42,19 @@ func NewServer() *Server {
 	supplierRepo := repositories.NewSupplierRepository(db)
 	supplierService := services.NewSupplierService(supplierRepo)
 	supplierController := controllers.NewSupplierController(supplierService)
+	webhookClient := webhook.NewClient()
+	purchasingRepo := repositories.NewPurchasingRepository(db)
+	purchasingDetRepo := repositories.NewPurchasingDetailRepository(db)
+	purchasingService := services.NewPurchasingService(
+		repositories.NewTransactionManagerRepository(db),
+		purchasingRepo,
+		purchasingDetRepo,
+		itemRepo,
+		supplierRepo,
+		userRepo,
+		webhookClient,
+	)
+	purchasingController := controllers.NewPurchasingController(purchasingService)
 
 	app := fiber.New()
 
@@ -48,6 +62,7 @@ func NewServer() *Server {
 	routes.AuthRoutes(api, authController)
 	routes.ItemRoute(api, itemController, authMw)
 	routes.SupplierRoute(api, supplierController, authMw)
+	routes.PurchasingRoute(api, purchasingController, authMw)
 
 	return &Server{
 		cfg: cfg,

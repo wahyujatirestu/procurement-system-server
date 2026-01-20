@@ -23,9 +23,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaW1wbGUgc
 Content-Type: application/json
 
 {
-    "name": "sariroti",
-    "stock": 5,
-    "price": 18000
+    "name": "sarimi",
+    "stock": 6,
+    "price": 5000
 }
 
 ###
@@ -46,3 +46,26 @@ Content-Type: application/json
 ###
 GET http://localhost:8888/api/v1/suppliers
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaW1wbGUgcHJvY3VyZW1lbnQgc3lzdGVtIiwiZXhwIjoxNzY4OTg2MTU5LCJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4ifQ.iEZYmW4nv_-L41Gl6DjaWyRL0S53GezAvUEweSLWnVM
+
+###
+GET http://localhost:8888/api/v1/purchases
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaW1wbGUgcHJvY3VyZW1lbnQgc3lzdGVtIiwiZXhwIjoxNzY4OTg2MTU5LCJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4ifQ.iEZYmW4nv_-L41Gl6DjaWyRL0S53GezAvUEweSLWnVM
+
+###
+POST http://localhost:8888/api/v1/purchases
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzaW1wbGUgcHJvY3VyZW1lbnQgc3lzdGVtIiwiZXhwIjoxNzY4OTg2MTU5LCJ1c2VyX2lkIjozLCJyb2xlIjoiYWRtaW4ifQ.iEZYmW4nv_-L41Gl6DjaWyRL0S53GezAvUEweSLWnVM
+Content-Type: application/json
+
+{
+    "supplier_id": 1,
+    "items": [
+        {
+        "item_id": 1,
+        "qty": 2
+        },
+        {
+        "item_id": 3,
+        "qty": 3
+        }
+    ]
+}

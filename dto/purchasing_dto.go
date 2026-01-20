@@ -2,7 +2,6 @@ package dto
 
 import "time"
 
-/* ================= REQUEST ================= */
 
 type CreatePurchasingRequest struct {
 	SupplierID uint                     `json:"supplier_id"`
@@ -14,7 +13,6 @@ type PurchasingItemRequest struct {
 	Qty    int  `json:"qty"`
 }
 
-/* ================= RESPONSE ================= */
 
 type PurchasingResponse struct {
 	ID         uint                    `json:"id"`
@@ -22,10 +20,10 @@ type PurchasingResponse struct {
 	GrandTotal float64                 `json:"grand_total"`
 	Supplier   SupplierMiniResponse    `json:"supplier"`
 	User       UserMiniResponse        `json:"user"`
-	Items      []PurchasingItemResponse `json:"items"`
+	Details    []PurchasingDetailResponse `json:"items"`
 }
 
-type PurchasingItemResponse struct {
+type PurchasingDetailResponse struct {
 	ItemID   uint    `json:"item_id"`
 	ItemName string  `json:"item_name"`
 	Qty      int     `json:"qty"`

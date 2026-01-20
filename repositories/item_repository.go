@@ -8,6 +8,8 @@ import (
 type ItemRepository interface {
 	Create(item *models.Item) error
 	FindAll() ([]models.Item, error)
+	FindById(id uint) (*models.Item, error)
+	Update(item *models.Item) error
 }
 
 type itemRepository struct {
@@ -26,4 +28,14 @@ func (r *itemRepository) FindAll() ([]models.Item, error) {
 	var items []models.Item
 	err := r.db.Find(&items).Error
 	return items, err
+}
+
+func (r *itemRepository) FindById(id uint) (*models.Item, error) {
+	var item models.Item
+	err := r.db.Where("id = ?", id).First(&item).Error
+	return &item, err
+}
+
+func (r *itemRepository) Update(item *models.Item) error {
+	return r.db.Save(item).Error
 }

@@ -9,7 +9,9 @@ import (
 
 func SupplierRoute(r fiber.Router, c *controllers.SupplierController, auth middleware.AuthMiddleware) {
 	supplier := r.Group("/suppliers")
-	supplier.Use(auth.RequireToken("admin"))
+	supplier.Use(auth.RequireToken())
 	supplier.Post("/", c.Create)
 	supplier.Get("/", c.FindAll)
+	supplier.Get("/:id", c.FindById)
+	supplier.Put("/:id", c.Update)
 }

@@ -12,6 +12,8 @@ import (
 type ItemService interface {
 	Create(req dto.CreateItemRequest) (*dto.ItemResponse, error)
 	FindAll() ([]dto.ItemResponse, error)
+	FindById(id uint) (*dto.ItemResponse, error)
+	Update(id uint, req dto.UpdateItemRequest) (*dto.ItemResponse, error)
 }
 
 
@@ -75,3 +77,46 @@ func (s *itemService) FindAll() ([]dto.ItemResponse, error) {
 	return responses, nil
 }
 
+
+func (s *itemService) FindById(id uint) (*dto.ItemResponse, error) {
+	item, err := s.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.ItemResponse{
+		ID:    item.ID,
+		Name:  item.Name,
+		Stock: item.Stock,
+		Price: item.Price,
+	}, nil
+}
+
+
+func (s *itemService) Update(id uint, req dto.UpdateItemRequest) (*dto.ItemResponse, error) {
+	item, err := s.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if strings.TrimSpace(req.Name) != "" {
+		item.Name = req.Name
+	}
+	if req.Stock >= 0 {
+		item.Stock = req.Stock
+	}
+	if req.Price >= 0 {
+		item.Price = req.Price
+	}
+
+	if err := s.repo.Update(item); err != nil {
+		return nil, err
+	}
+
+	return &dto.ItemResponse{
+		ID:    item.ID,
+		Name:  item.Name,
+		Stock: item.Stock,
+		Price: item.Price,
+	}, nil
+}

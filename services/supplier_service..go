@@ -14,6 +14,8 @@ var validate = validator.New()
 type SupplierService interface {
 	Create(req dto.CreateSupplierRequest) (*dto.SupplierResponse, error)
 	FindAll() ([]dto.SupplierResponse, error)
+	FindById(id uint) (*dto.SupplierResponse, error)
+	Update(id uint, req dto.UpdateSupplierRequest) (*dto.SupplierResponse, error)
 }
 
 
@@ -83,3 +85,46 @@ func (s *supplierService) FindAll() ([]dto.SupplierResponse, error) {
 	return responses, nil
 }
 
+
+func (s *supplierService) FindById(id uint) (*dto.SupplierResponse, error) {
+	supplier, err := s.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.SupplierResponse{
+		ID:      supplier.ID,
+		Name:    supplier.Name,
+		Email:   supplier.Email,
+		Address: supplier.Address,
+	}, nil
+}
+
+
+func (s *supplierService) Update(id uint, req dto.UpdateSupplierRequest) (*dto.SupplierResponse, error) {
+	supplier, err := s.repo.FindById(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if strings.TrimSpace(req.Name) != "" {
+		supplier.Name = req.Name
+	}
+	if strings.TrimSpace(req.Email) != "" {
+		supplier.Email = req.Email
+	}
+	if strings.TrimSpace(req.Address) != "" {
+		supplier.Address = req.Address
+	}
+
+	if err := s.repo.Update(supplier); err != nil {
+		return nil, err
+	}
+
+	return &dto.SupplierResponse{
+		ID:      supplier.ID,
+		Name:    supplier.Name,
+		Email:   supplier.Email,
+		Address: supplier.Address,
+	}, nil
+}

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/wahyujatirestu/simple-procurement-system/dto"
 	"github.com/wahyujatirestu/simple-procurement-system/services"
 	"github.com/wahyujatirestu/simple-procurement-system/utils"
@@ -38,4 +40,31 @@ func (c *SupplierController) FindAll(ctx *fiber.Ctx) error {
 	}
 
 	return utils.Success(ctx, 200, "success", suppliers)
+}
+
+func (c *SupplierController) FindById(ctx *fiber.Ctx) error {
+	idParam := ctx.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 32)
+	supplier, err := c.service.FindById(uint(id))
+	if err != nil {
+		return utils.Error(ctx, 500, "failed to fetch supplier")
+	}
+
+	return utils.Success(ctx, 200, "success", supplier)
+}
+
+func (c *SupplierController) Update(ctx *fiber.Ctx) error {
+	var req dto.UpdateSupplierRequest
+	if err := ctx.BodyParser(&req); err != nil {
+		return utils.Error(ctx, 400, "invalid request")
+	}	
+
+	idParam := ctx.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 32)
+	supplier, err := c.service.Update(uint(id), req)
+	if err != nil {
+		return utils.Error(ctx, 500, "failed to update supplier")
+	}	
+
+	return utils.Success(ctx, 200, "supplier updated successfully",supplier)
 }
