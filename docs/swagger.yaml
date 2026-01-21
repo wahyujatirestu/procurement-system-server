@@ -1,0 +1,559 @@
+basePath: /api/v1
+definitions:
+  dto.AuthResponse:
+    properties:
+      id:
+        type: integer
+      role:
+        type: string
+      token:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.CreateItemRequest:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    type: object
+  dto.CreatePurchasingRequest:
+    properties:
+      items:
+        items:
+          $ref: '#/definitions/dto.PurchasingItemRequest'
+        type: array
+      supplier_id:
+        type: integer
+    type: object
+  dto.CreateSupplierRequest:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        minLength: 3
+        type: string
+    required:
+    - address
+    - email
+    - name
+    type: object
+  dto.ItemResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    type: object
+  dto.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.PurchasingDetailResponse:
+    properties:
+      item_id:
+        type: integer
+      item_name:
+        type: string
+      price:
+        type: number
+      qty:
+        type: integer
+      sub_total:
+        type: number
+    type: object
+  dto.PurchasingItemRequest:
+    properties:
+      item_id:
+        type: integer
+      qty:
+        type: integer
+    type: object
+  dto.PurchasingResponse:
+    properties:
+      date:
+        type: string
+      grand_total:
+        type: number
+      id:
+        type: integer
+      items:
+        items:
+          $ref: '#/definitions/dto.PurchasingDetailResponse'
+        type: array
+      supplier:
+        $ref: '#/definitions/dto.SupplierMiniResponse'
+      user:
+        $ref: '#/definitions/dto.UserMiniResponse'
+    type: object
+  dto.RegisterRequest:
+    properties:
+      confirmPassword:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    type: object
+  dto.SupplierMiniResponse:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.SupplierResponse:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  dto.UpdateItemRequest:
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      stock:
+        type: integer
+    type: object
+  dto.UpdateSupplierRequest:
+    properties:
+      address:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.UserMiniResponse:
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+    type: object
+host: localhost:8888
+info:
+  contact:
+    email: adijati1029@gmail.com
+    name: Restu Adi Wahyujati
+  description: REST API untuk Simple Procurement System
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Simple Procurement System
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Login payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Logout user
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Register payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.AuthResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register new user
+      tags:
+      - Auth
+  /items:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.ItemResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+      security:
+      - BearerAuth: []
+      summary: Get list of items
+      tags:
+      - Items
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Item payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateItemRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new item
+      tags:
+      - Items
+  /items/{id}:
+    delete:
+      parameters:
+      - description: Item ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete item by id
+      tags:
+      - Items
+    get:
+      parameters:
+      - description: Item ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+      security:
+      - BearerAuth: []
+      summary: Get item by id
+      tags:
+      - Items
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Item ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Item payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateItemRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.ItemResponse'
+      security:
+      - BearerAuth: []
+      summary: Update item by id
+      tags:
+      - Items
+  /purchases:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.PurchasingResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.PurchasingResponse'
+      security:
+      - BearerAuth: []
+      summary: Get list of purchases
+      tags:
+      - Purchases
+    post:
+      consumes:
+      - application/json
+      description: Insert header, insert detail, update stock (atomic)
+      parameters:
+      - description: Purchase payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreatePurchasingRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.PurchasingResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.PurchasingResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/dto.PurchasingResponse'
+      security:
+      - BearerAuth: []
+      summary: Create purchase transaction
+      tags:
+      - Purchases
+  /suppliers:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.SupplierResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+      security:
+      - BearerAuth: []
+      summary: Get list of suppliers
+      tags:
+      - Suppliers
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Supplier payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSupplierRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+      security:
+      - BearerAuth: []
+      summary: Create new supplier
+      tags:
+      - Suppliers
+  /suppliers/{id}:
+    delete:
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+      security:
+      - BearerAuth: []
+      summary: Delete supplier by id
+      tags:
+      - Suppliers
+    get:
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+      security:
+      - BearerAuth: []
+      summary: Get supplier by id
+      tags:
+      - Suppliers
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Supplier payload
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSupplierRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/dto.SupplierResponse'
+      security:
+      - BearerAuth: []
+      summary: Update supplier by id
+      tags:
+      - Suppliers
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" + a space + your JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -18,6 +18,16 @@ func NewItemController(s services.ItemService) *ItemController {
 	return &ItemController{s}
 }
 
+// Create Item
+// @Summary Create new item
+// @Tags Items
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param request body dto.CreateItemRequest true "Item payload"
+// @Success 201 {object} dto.ItemResponse
+// @Failure 400 {object} dto.ItemResponse
+// @Router /items [post]
 func (c *ItemController) Create(ctx *fiber.Ctx) error {
 	var req dto.CreateItemRequest
 	if err := ctx.BodyParser(&req); err != nil {
@@ -32,7 +42,14 @@ func (c *ItemController) Create(ctx *fiber.Ctx) error {
 	return utils.Success(ctx, 201, "item created successfully", res)
 }
 
-
+// Get Items
+// @Summary Get list of items
+// @Tags Items
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {array} dto.ItemResponse
+// @Failure 500 {object} dto.ItemResponse
+// @Router /items [get]
 func (c *ItemController) FindAll(ctx *fiber.Ctx) error {
 	items, err := c.service.FindAll()
 	if err != nil {
@@ -42,6 +59,15 @@ func (c *ItemController) FindAll(ctx *fiber.Ctx) error {
 	return utils.Success(ctx, 200, "success", items)
 }
 
+// Get Item
+// @Summary Get item by id
+// @Tags Items
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "Item ID"
+// @Success 200 {object} dto.ItemResponse
+// @Failure 404 {object} dto.ItemResponse
+// @Router /items/{id} [get]
 func (c *ItemController) FindById(ctx *fiber.Ctx) error {
 	idParam := ctx.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 32)
@@ -54,6 +80,18 @@ func (c *ItemController) FindById(ctx *fiber.Ctx) error {
 	
 }
 
+// Update Item
+// @Summary Update item by id
+// @Tags Items
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Param id path int true "Item ID"
+// @Param request body dto.UpdateItemRequest true "Item payload"
+// @Success 200 {object} dto.ItemResponse
+// @Failure 400 {object} dto.ItemResponse
+// @Failure 500 {object} dto.ItemResponse
+// @Router /items/{id} [put]
 func (c *ItemController) Update(ctx *fiber.Ctx) error {
 	var req dto.UpdateItemRequest
 	if err := ctx.BodyParser(&req); err != nil {
@@ -71,6 +109,15 @@ func (c *ItemController) Update(ctx *fiber.Ctx) error {
 	
 }
 
+// Delete Item
+// @Summary Delete item by id
+// @Tags Items
+// @Security BearerAuth
+// @Produce json
+// @Param id path int true "Item ID"
+// @Success 200 {object} dto.ItemResponse
+// @Failure 404 {object} dto.ItemResponse
+// @Router /items/{id} [delete]
 func (c *ItemController) Delete(ctx *fiber.Ctx) error {
 	idParam := ctx.Params("id")
 	id, err := strconv.ParseUint(idParam, 10, 32)
