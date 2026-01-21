@@ -10,4 +10,5 @@ func AuthRoutes(r fiber.Router, ac *controllers.AuthController)  {
 
 	auth.Post("/register", ac.Register)
 	auth.Post("/login", ac.Login)
+	auth.Post("/logout", ac.Logout)	
 }

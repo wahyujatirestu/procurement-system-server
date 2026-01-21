@@ -42,3 +42,7 @@ func (c *AuthController) Login(ctx *fiber.Ctx) error {
 	
 	return utils.Success(ctx, 200, "login successfully", res)
 }
+
+func (c *AuthController) Logout(ctx *fiber.Ctx) error {
+	return utils.Success(ctx, 200, "logout successfully", nil)
+}
