@@ -14,4 +14,5 @@ func ItemRoute(r fiber.Router, c *controllers.ItemController, auth middleware.Au
 	item.Get("/", c.FindAll)
 	item.Get("/:id", c.FindById)
 	item.Put("/:id", c.Update)
+	item.Delete("/:id", c.Delete)
 }

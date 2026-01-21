@@ -10,6 +10,7 @@ type ItemRepository interface {
 	FindAll() ([]models.Item, error)
 	FindById(id uint) (*models.Item, error)
 	Update(item *models.Item) error
+	Delete(id uint) error
 }
 
 type itemRepository struct {
@@ -38,4 +39,8 @@ func (r *itemRepository) FindById(id uint) (*models.Item, error) {
 
 func (r *itemRepository) Update(item *models.Item) error {
 	return r.db.Save(item).Error
+}
+
+func (r *itemRepository) Delete(id uint) error {
+	return r.db.Delete(&models.Item{}, id).Error
 }

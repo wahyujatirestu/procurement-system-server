@@ -10,6 +10,7 @@ type SupplierRepository interface {
 	FindAll() ([]models.Supplier, error)
 	FindById(id uint) (*models.Supplier, error)
 	Update(supplier *models.Supplier) error
+	Delete(id uint) error
 }
 
 type supplierRepository struct {
@@ -38,4 +39,8 @@ func (r *supplierRepository) FindById(id uint) (*models.Supplier, error) {
 
 func (r *supplierRepository) Update(supplier *models.Supplier) error {
 	return r.db.Save(supplier).Error
+}
+
+func (r *supplierRepository) Delete(id uint) error {
+	return r.db.Delete(&models.Supplier{}, id).Error
 }

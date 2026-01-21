@@ -68,3 +68,14 @@ func (c *SupplierController) Update(ctx *fiber.Ctx) error {
 
 	return utils.Success(ctx, 200, "supplier updated successfully",supplier)
 }
+
+func (c *SupplierController) Delete(ctx *fiber.Ctx) error {
+	idParam := ctx.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 32)
+	err = c.service.Delete(uint(id))
+	if err != nil {
+		return utils.Error(ctx, 500, "failed to delete supplier")
+	}
+
+	return utils.Success(ctx, 200, "supplier deleted successfully", nil)
+}

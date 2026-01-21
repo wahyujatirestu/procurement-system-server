@@ -70,3 +70,14 @@ func (c *ItemController) Update(ctx *fiber.Ctx) error {
 	return utils.Success(ctx, 200, "item updated successfully",item)
 	
 }
+
+func (c *ItemController) Delete(ctx *fiber.Ctx) error {
+	idParam := ctx.Params("id")
+	id, err := strconv.ParseUint(idParam, 10, 32)
+	err = c.service.Delete(uint(id))
+	if err != nil {
+		return utils.Error(ctx, 500, "failed to delete item")
+	}
+
+	return utils.Success(ctx, 200, "item deleted successfully", nil)
+}

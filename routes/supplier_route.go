@@ -14,4 +14,5 @@ func SupplierRoute(r fiber.Router, c *controllers.SupplierController, auth middl
 	supplier.Get("/", c.FindAll)
 	supplier.Get("/:id", c.FindById)
 	supplier.Put("/:id", c.Update)
+	supplier.Delete("/:id", c.Delete)
 }

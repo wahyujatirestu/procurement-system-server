@@ -14,6 +14,7 @@ type ItemService interface {
 	FindAll() ([]dto.ItemResponse, error)
 	FindById(id uint) (*dto.ItemResponse, error)
 	Update(id uint, req dto.UpdateItemRequest) (*dto.ItemResponse, error)
+	Delete(id uint) error
 }
 
 
@@ -119,4 +120,17 @@ func (s *itemService) Update(id uint, req dto.UpdateItemRequest) (*dto.ItemRespo
 		Stock: item.Stock,
 		Price: item.Price,
 	}, nil
+}
+
+
+func (s *itemService) Delete(id uint) error {
+	item, err := s.repo.FindById(id)
+	if err != nil {
+		return err
+	}
+	if item == nil {
+		return errors.New("item not found")
+	}
+
+	return s.repo.Delete(id)
 }

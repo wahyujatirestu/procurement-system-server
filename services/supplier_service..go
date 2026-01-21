@@ -16,6 +16,7 @@ type SupplierService interface {
 	FindAll() ([]dto.SupplierResponse, error)
 	FindById(id uint) (*dto.SupplierResponse, error)
 	Update(id uint, req dto.UpdateSupplierRequest) (*dto.SupplierResponse, error)
+	Delete(id uint) error
 }
 
 
@@ -127,4 +128,17 @@ func (s *supplierService) Update(id uint, req dto.UpdateSupplierRequest) (*dto.S
 		Email:   supplier.Email,
 		Address: supplier.Address,
 	}, nil
+}
+
+
+func (s *supplierService) Delete(id uint) error {
+	supplier, err := s.repo.FindById(id)
+	if err != nil {
+		return err
+	}
+	if supplier == nil {
+		return errors.New("supplier not found")
+	}
+
+	return s.repo.Delete(id)
 }
